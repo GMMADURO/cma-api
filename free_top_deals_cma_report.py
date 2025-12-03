@@ -461,12 +461,14 @@ def build_comps(
         min(top_n, len(selected)), "distance_km"
     ).copy()
 '''
+
+
 def build_comps(
     df: pd.DataFrame,
     subject: pd.Series,
-    top_n: int = 3,
+    top_n: int = 5,
     max_radius_km: float = 10.0,
-    min_required: int = 3,
+    min_required: int = 5,
     size_tol: float = 0.40,  # 0.30 = 30% max deviation
 ) -> pd.DataFrame:
     """
@@ -514,12 +516,26 @@ def build_comps(
     subject_type = str(subject.get("type", "")).strip().lower()
     s_id = subject.get("id")
 
+
+
     comps = df.copy()
     comps["similar_id"] = comps["id"].astype(str)
 
-    # normalize types and numeric columns
+
     comps["_type_norm"] = comps["type"].astype(str).str.strip().str.lower()
     comps = comps.dropna(subset=["land_m2", "built_m2", "lat", "lon", "price"])
+
+    #select only sale in progress - we don't have enough data at the moment
+    #comps = comps[ comps["status"].astype(str).str.strip().str.lower() == "sale in progress" ]
+    #print("len(comps) sale in progress:",len(comps))
+
+    # === FILTER: only comps with Status = "Sale in Progress" ===
+    #if "status" in comps.columns:
+    #    comps = comps[ comps["status"].astype(str).str.strip().str.lower() == "sale in progress" ]
+
+    print(comps[['id','type','price','land_m2','built_m2','lat','lon']])
+
+
     for c in ["land_m2", "built_m2", "lat", "lon", "price", "beds", "baths"]:
         if c in comps.columns:
             comps[c] = pd.to_numeric(comps[c], errors="coerce")
@@ -1108,10 +1124,10 @@ def generate_cma_report(subject: Dict[str, Any], comps: pd.DataFrame, output_pat
         summary_text = _build_summary_text(subject, comps_sorted, ask, avg_price, disc_abs, disc_pct)
         doc.set_font("Helvetica", "B", 12)
         doc.set_text_color(*BRAND_BLACK)
-        doc.cell(0, 8, "Market Analysis", ln=1)
+        #doc.cell(0, 8, "Market Analysis", ln=1)  #creates unwanted second page
         doc.set_font("Helvetica", "", 10)
         doc.set_text_color(0, 0, 0)
-        doc.multi_cell(0, 6, summary_text)
+        doc.multi_cell(0, 5, summary_text)
 
         os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
         doc.output(output_path)
@@ -1209,7 +1225,7 @@ def run_cma_from_params(params: Dict[str, Any]) -> Dict[str, Any]:
         "prepare_export": bool(params.get("prepare_export", False)),
         "export_path": params.get("export_path", "rankings.csv"),
         "generate_all_pdfs": bool(params.get("generate_all_pdfs", False)),
-        "top_n": int(params.get("top_n", 3)),
+        "top_n": int(params.get("top_n", 5)),
         "start_radius_km": float(params.get("start_radius_km", 1.0)),
         "step_km": float(params.get("step_km", 1.0)),
         "max_radius_km": float(params.get("max_radius_km", 20)),
@@ -1306,9 +1322,9 @@ if __name__ == "__main__":
         "csv": "properties.csv",
         "out": "reports/cma_new_subject.pdf",
         "subject_csv": {
-            "ID": "form address",
-            "Lot size (M^2)": 600,
-            "Built up size (M^2)": 150,
+            "ID": "Caya Ritmo 14",
+            "Lot size (M^2)": 578,
+            "Built up size (M^2)": 160,
             "Bedrooms": 0,
             "Baths": 0,
             "Latitude": 12.5506,
@@ -1403,7 +1419,7 @@ if __name__ == "__main__":
     '''
 
     #12.5204215,-69.9624395
-    '''
+    
     form_submit = {
         "csv": "properties.csv",
         "out": "reports/cma_new_subject.pdf",
@@ -1418,7 +1434,7 @@ if __name__ == "__main__":
             "Image URL": "https://static.wixstatic.com/media/5711f6_6a1bbfc025864714877aa47653f0e2f5~mv2.jpg"  
         },
     }
-    '''
+    
     '''
     form_submit = {
         "csv": "properties.csv",
@@ -1454,21 +1470,40 @@ if __name__ == "__main__":
     }
     '''
 
-    
+    '''
     form_submit = {
         "csv": "properties.csv",
         "out": "reports/cma_new_subject.pdf",
         "subject_csv": {
             "ID": "Papilon, Santa Cruz, Aruba",
-            "Lot size (M^2)": 492,
-            "Built up size (M^2)": 81,
+            "Lot size (M^2)": 269,
+            "Built up size (M^2)": 95,
             "Bedrooms": "",
             "Baths": "",
-            "Latitude":  12.5015525,
-            "Longitude": -69.9883363,
+            "Latitude":  12.4609737,
+            "Longitude": -69.9490783,
             "Image URL": "https://static.wixstatic.com/media/5711f6_44408680ef454bf89498dc5b75a33e0f~mv2.jpeg"   
         },
     }
+    '''
+
+    #,
+    '''
+    form_submit = {
+        "csv": "properties.csv",
+        "out": "reports/cma_new_subject.pdf",
+        "subject_csv": {
+            "ID": "Caya Seida 15, Ayo, Paradera",
+            "Lot size (M^2)": 316,
+            "Built up size (M^2)": 59.8,
+            "Bedrooms": "",
+            "Baths": "",
+            "Latitude":  12.5458648,
+            "Longitude": -70.0025905,
+            "Image URL": "https://static.wixstatic.com/media/5711f6_316c5c2ab4a5444eaf494df27c798067~mv2.jpg"   
+        },
+    }
+    '''
     
 
 
