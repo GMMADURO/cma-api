@@ -1317,7 +1317,7 @@ if __name__ == "__main__":
     }
     '''
 
-    '''
+    
     form_submit = {
         "csv": "properties.csv",
         "out": "reports/cma_new_subject.pdf",
@@ -1332,7 +1332,7 @@ if __name__ == "__main__":
             "Image URL": "https://static.wixstatic.com/media/5711f6_ec3d3ddc05f541a983bf2084cdfb594c~mv2.png"  
         },
     }
-    '''
+    
 
     '''
     form_submit = {
@@ -1419,7 +1419,7 @@ if __name__ == "__main__":
     '''
 
     #12.5204215,-69.9624395
-    
+    '''
     form_submit = {
         "csv": "properties.csv",
         "out": "reports/cma_new_subject.pdf",
@@ -1434,6 +1434,7 @@ if __name__ == "__main__":
             "Image URL": "https://static.wixstatic.com/media/5711f6_6a1bbfc025864714877aa47653f0e2f5~mv2.jpg"  
         },
     }
+    '''
     
     '''
     form_submit = {

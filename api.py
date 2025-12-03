@@ -52,12 +52,12 @@ class SubjectProperty(BaseModel):
 class CMARequest(BaseModel):
     """Request model for CMA generation"""
     subject: SubjectProperty
-    top_n: Optional[int] = 3
+    top_n: Optional[int] = 5
     start_radius_km: Optional[float] = 1.0
     step_km: Optional[float] = 1.0
-    max_radius_km: Optional[float] = 10.0
-    size_tol_land: Optional[float] = 0.2
-    size_tol_built: Optional[float] = 0.2
+    max_radius_km: Optional[float] = 20.0
+    size_tol_land: Optional[float] = 0.35
+    size_tol_built: Optional[float] = 0.35
     min_required: Optional[int] = 3
 
 @app.get("/")
